@@ -7,9 +7,14 @@ from app.database.base import Base
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        index=True
+    )
 
-    full_name: Mapped[str] = mapped_column(String(100))
+    full_name: Mapped[str] = mapped_column(
+        String(100)
+    )
 
     email: Mapped[str] = mapped_column(
         String(255),
@@ -17,4 +22,26 @@ class User(Base):
         index=True
     )
 
-    password: Mapped[str] = mapped_column(String(255))
+    password: Mapped[str] = mapped_column(
+        String(255)
+    )
+
+    phone: Mapped[str | None] = mapped_column(
+        String(20),
+        nullable=True
+    )
+
+    bio: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True
+    )
+
+    github: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )
+
+    linkedin: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )
