@@ -31,3 +31,42 @@ def create_hackathon(
 
 def get_all_hackathons(db: Session):
     return db.query(Hackathon).all()
+
+def get_hackathon_by_id(
+    db: Session,
+    hackathon_id: int
+):
+    return (
+        db.query(Hackathon)
+        .filter(Hackathon.id == hackathon_id)
+        .first()
+    )
+    
+def update_hackathon(
+    db: Session,
+    db_hackathon: Hackathon,
+    hackathon: HackathonCreate
+):
+    db_hackathon.title = hackathon.title
+    db_hackathon.description = hackathon.description
+    db_hackathon.organizer = hackathon.organizer
+    db_hackathon.start_date = hackathon.start_date
+    db_hackathon.end_date = hackathon.end_date
+    db_hackathon.registration_deadline = hackathon.registration_deadline
+    db_hackathon.mode = hackathon.mode
+    db_hackathon.location = hackathon.location
+    db_hackathon.prize_pool = hackathon.prize_pool
+    db_hackathon.max_team_size = hackathon.max_team_size
+    db_hackathon.registration_link = hackathon.registration_link
+
+    db.commit()
+    db.refresh(db_hackathon)
+
+    return db_hackathon
+
+def delete_hackathon(
+    db: Session,
+    db_hackathon: Hackathon
+):
+    db.delete(db_hackathon)
+    db.commit()
