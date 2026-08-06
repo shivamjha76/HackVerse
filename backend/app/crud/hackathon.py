@@ -29,9 +29,26 @@ def create_hackathon(
 
     return db_hackathon
 
-def get_all_hackathons(db: Session):
-    return db.query(Hackathon).all()
+def get_all_hackathons(
+    db: Session,
+    search: str | None = None,
+    page: int = 1,
+    limit: int = 10,
+):
+    query = db.query(Hackathon)
 
+    if search:
+        query = query.filter(
+            Hackathon.title.ilike(f"%{search}%")
+        )
+
+    return (
+        query
+        .offset((page - 1) * limit)
+        .limit(limit)
+        .all()
+    )
+    
 def get_hackathon_by_id(
     db: Session,
     hackathon_id: int

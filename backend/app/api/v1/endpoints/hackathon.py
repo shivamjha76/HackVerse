@@ -39,13 +39,20 @@ def create(
     response_model=list[HackathonResponse]
 )
 def get_all(
-    db: Session = Depends(get_db)
+    search: str | None = None,
+    page: int = 1,
+    limit: int = 10,
+    db: Session = Depends(get_db),
 ):
     from app.crud.hackathon import get_all_hackathons
 
-    return get_all_hackathons(db)
-
-
+    return get_all_hackathons(
+        db=db,
+        search=search,
+        page=page,
+        limit=limit,
+    )
+    
 @router.get(
     "/{hackathon_id}",
     response_model=HackathonResponse
