@@ -30,3 +30,23 @@ def get_team_member(
         )
         .first()
     )
+    
+def remove_team_member(
+    db: Session,
+    team_member: TeamMember
+):
+    db.delete(team_member)
+
+    return team_member
+
+def get_team_member_by_id(
+    db: Session,
+    team_member_id: int,
+):
+    return (
+        db.query(TeamMember)
+        .filter(
+            TeamMember.id == team_member_id
+        )
+        .first()
+    )

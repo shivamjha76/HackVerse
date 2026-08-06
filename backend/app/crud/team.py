@@ -31,3 +31,11 @@ def get_team_by_id(
         .filter(Team.id == team_id)
         .first()
     )
+    
+def transfer_team_leadership(
+    team: Team,
+    new_leader_id: int,
+):
+    team.leader_id = new_leader_id
+
+    return team
