@@ -38,17 +38,25 @@ def create(
     "",
     response_model=list[HackathonResponse]
 )
+
 def get_all(
     search: str | None = None,
+    mode: str | None = None,
+    sort: str | None = None,
+    order: str = "asc",
     page: int = 1,
     limit: int = 10,
     db: Session = Depends(get_db),
 ):
+    
     from app.crud.hackathon import get_all_hackathons
 
     return get_all_hackathons(
         db=db,
         search=search,
+        mode=mode,
+        sort=sort,
+        order=order,
         page=page,
         limit=limit,
     )

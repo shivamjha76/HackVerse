@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 
 from app.models.hackathon import Hackathon
 from app.schemas.hackathon import HackathonCreate
@@ -32,6 +33,9 @@ def create_hackathon(
 def get_all_hackathons(
     db: Session,
     search: str | None = None,
+    mode: str | None = None,
+    sort: str | None = None,
+    order: str = "asc",
     page: int = 1,
     limit: int = 10,
 ):
@@ -42,6 +46,41 @@ def get_all_hackathons(
             Hackathon.title.ilike(f"%{search}%")
         )
 
+    if mode:
+        query = query.filter(
+    Hackathon.mode.ilike(mode.strip())
+    )
+    
+    if sort:
+        allowed_sort_fields = {
+        "title": Hackathon.title,
+        "start_date": Hackathon.start_date,
+        "end_date": Hackathon.end_date,
+        "registration_deadline": Hackathon.registration_deadline,
+        "organizer": Hackathon.organizer,
+    }
+
+    sort_column = allowed_sort_fields.get(sort)
+
+    if not sort_column:
+        raise HTTPException(
+            status_code=400,
+            detail = (
+                "Invalid sort fields. "
+                "Allowed fields: title, organizer, "
+                "start_date, end_date, registration_deadline"
+            ),
+        )
+             
+    if order.lower() == "desc":
+            query = query.order_by(
+                sort_column.desc()
+            )
+    else:
+            query = query.order_by(
+                sort_column.asc()
+            )
+            
     return (
         query
         .offset((page - 1) * limit)
