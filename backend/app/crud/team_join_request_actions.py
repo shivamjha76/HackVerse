@@ -23,3 +23,10 @@ def approve_request(
     join_request.status = "approved"
 
     return join_request
+
+def reject_request(
+    join_request: TeamJoinRequest
+):
+    join_request.status = "rejected"
+
+    return join_request
