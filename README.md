@@ -3,6 +3,10 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+<p align="center">
+  <img src="assets/banner.png" alt="HackVerse Banner" width="100%">
+</p>
+
 # 🚀 HackVerse
 
 HackVerse is a full-stack hackathon management platform designed to simplify the entire hackathon lifecycle for organizers and participants.
