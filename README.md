@@ -1,3 +1,8 @@
+![Python](https://img.shields.io/badge/Python-3.13-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-Framework-009688)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 # 🚀 HackVerse
 
 HackVerse is a full-stack hackathon management platform designed to simplify the entire hackathon lifecycle for organizers and participants.
