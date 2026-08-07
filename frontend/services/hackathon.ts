@@ -10,3 +10,23 @@ export async function createHackathon(
     body: JSON.stringify(data),
   });
 }
+
+export async function getHackathons() {
+  return apiFetch("/hackathons");
+}
+
+export async function getHackathonById(
+  id: number | string
+) {
+  return apiFetch(`/hackathons/${id}`);
+}
+
+export async function updateHackathon(
+  id: string,
+  data: any
+) {
+  return apiFetch(`/hackathons/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}

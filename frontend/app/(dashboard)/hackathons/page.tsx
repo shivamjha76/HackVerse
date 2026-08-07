@@ -1,24 +1,24 @@
-import EmptyState from "@/components/hackathons/EmptyState";
 import CreateHackathonButton from "@/components/hackathons/CreateHackathonButton";
+import HackathonList from "@/components/hackathons/HackathonList";
 
 export default function HackathonsPage() {
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-slate-900">
-          Hackathons
-        </h1>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-bold text-slate-900">
+            Hackathons
+          </h1>
 
-        <p className="mt-2 text-slate-500">
-          Create and manage your hackathons.
-        </p>
+          <p className="mt-2 text-slate-500">
+            Create and manage your hackathons.
+          </p>
+        </div>
+
+        <CreateHackathonButton />
       </div>
 
-      <EmptyState
-        title="No hackathons yet"
-        description="Create your first hackathon to start accepting participants."
-        buttonText="Create Hackathon"
-      />
+      <HackathonList />
     </div>
   );
 }

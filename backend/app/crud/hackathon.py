@@ -44,17 +44,12 @@ def get_all_hackathons(
     query = db.query(Hackathon)
 
     if search:
-        query = query.filter(
-            Hackathon.title.ilike(f"%{search}%")
-        )
+        query = query.filter(Hackathon.title.ilike(f"%{search}%"))
 
     if mode:
-        query = query.filter(
-    Hackathon.mode.ilike(mode.strip())
-    )
-    
-    if sort:
-        allowed_sort_fields = {
+        query = query.filter(Hackathon.mode.ilike(mode.strip()))
+
+    allowed_sort_fields = {
         "title": Hackathon.title,
         "start_date": Hackathon.start_date,
         "end_date": Hackathon.end_date,
@@ -62,30 +57,26 @@ def get_all_hackathons(
         "organizer": Hackathon.organizer,
     }
 
-    sort_column = allowed_sort_fields.get(sort)
+    if sort:
+        sort_column = allowed_sort_fields.get(sort)
 
-    if not sort_column:
-        raise HTTPException(
-            status_code=400,
-            detail = (
-                "Invalid sort fields. "
-                "Allowed fields: title, organizer, "
-                "start_date, end_date, registration_deadline"
-            ),
-        )
-             
-    if order.lower() == "desc":
-            query = query.order_by(
-                sort_column.desc()
+        if not sort_column:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "Invalid sort field. "
+                    "Allowed fields: title, organizer, "
+                    "start_date, end_date, registration_deadline"
+                ),
             )
-    else:
-            query = query.order_by(
-                sort_column.asc()
-            )
-            
+
+        if order.lower() == "desc":
+            query = query.order_by(sort_column.desc())
+        else:
+            query = query.order_by(sort_column.asc())
+
     return (
-        query
-        .offset((page - 1) * limit)
+        query.offset((page - 1) * limit)
         .limit(limit)
         .all()
     )
