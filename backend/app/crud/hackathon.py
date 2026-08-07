@@ -11,12 +11,14 @@ def create_hackathon(
 ):
     db_hackathon = Hackathon(
         title=hackathon.title,
+        short_description=hackathon.short_description,
         description=hackathon.description,
         organizer=hackathon.organizer,
         start_date=hackathon.start_date,
         end_date=hackathon.end_date,
         registration_deadline=hackathon.registration_deadline,
         mode=hackathon.mode,
+        status=hackathon.status,
         location=hackathon.location,
         prize_pool=hackathon.prize_pool,
         max_team_size=hackathon.max_team_size,
@@ -104,12 +106,14 @@ def update_hackathon(
     hackathon: HackathonCreate
 ):
     db_hackathon.title = hackathon.title
+    db_hackathon.short_description = hackathon.short_description
     db_hackathon.description = hackathon.description
     db_hackathon.organizer = hackathon.organizer
     db_hackathon.start_date = hackathon.start_date
     db_hackathon.end_date = hackathon.end_date
     db_hackathon.registration_deadline = hackathon.registration_deadline
     db_hackathon.mode = hackathon.mode
+    db_hackathon.status = hackathon.status
     db_hackathon.location = hackathon.location
     db_hackathon.prize_pool = hackathon.prize_pool
     db_hackathon.max_team_size = hackathon.max_team_size

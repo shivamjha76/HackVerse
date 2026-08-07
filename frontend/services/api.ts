@@ -6,19 +6,31 @@ export async function apiFetch(
   endpoint: string,
   options: RequestInit = {}
 ) {
+  const token = localStorage.getItem("access_token");
+
   const response = await fetch(
     `${BASE_URL}${endpoint}`,
     {
+      ...options,
+
       headers: {
         "Content-Type": "application/json",
+
+        ...(token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {}),
+
         ...(options.headers || {}),
       },
-      ...options,
     }
   );
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
+    const error = await response
+      .json()
+      .catch(() => ({}));
 
     throw new Error(
       error.detail || "Something went wrong."

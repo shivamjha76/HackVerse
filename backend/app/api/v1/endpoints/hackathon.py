@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.security import get_current_user
@@ -6,7 +6,7 @@ from app.crud.hackathon import create_hackathon
 from app.database.database import get_db
 
 from fastapi import HTTPException
-from fastapi import APIRouter, Depends, HTTPException
+
 from app.schemas.hackathon import (
     HackathonCreate,
     HackathonResponse,

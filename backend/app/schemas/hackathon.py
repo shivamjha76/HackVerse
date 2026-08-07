@@ -5,12 +5,14 @@ from pydantic import BaseModel
 
 class HackathonCreate(BaseModel):
     title: str
-    description: str
+    short_description: str
+    description: str | None = None
     organizer: str
     start_date: datetime
     end_date: datetime
     registration_deadline: datetime
     mode: str
+    status: str = "draft"
     location: str
     prize_pool: str
     max_team_size: int
@@ -20,12 +22,14 @@ class HackathonCreate(BaseModel):
 class HackathonResponse(BaseModel):
     id: int
     title: str
-    description: str
+    short_description: str
+    description: str | None = None  
     organizer: str
     start_date: datetime
     end_date: datetime
     registration_deadline: datetime
     mode: str
+    status: str
     location: str
     prize_pool: str
     max_team_size: int

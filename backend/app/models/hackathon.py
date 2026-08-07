@@ -9,6 +9,7 @@ class Hackathon(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     title = Column(String, nullable=False)
+    short_description = Column(Text, nullable=False)
 
     description = Column(Text)
 
@@ -21,6 +22,7 @@ class Hackathon(Base):
     registration_deadline = Column(DateTime)
 
     mode = Column(String)
+    status = Column(String(20), nullable=False, default="draft")
 
     location = Column(String)
 
