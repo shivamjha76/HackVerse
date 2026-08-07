@@ -1,20 +1,17 @@
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import { ReactNode } from "react";
 
-export default function DashboardLayout({
+import DashboardLayout from "@/components/layout/DashboardLayout";
+
+type LayoutProps = {
+  children: ReactNode;
+};
+
+export default function Layout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: LayoutProps) {
   return (
-    <>
-      <Navbar />
-
-      <main className="min-h-screen">
-        {children}
-      </main>
-
-      <Footer />
-    </>
+    <DashboardLayout>
+      {children}
+    </DashboardLayout>
   );
 }
