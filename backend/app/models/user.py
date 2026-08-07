@@ -25,6 +25,11 @@ class User(Base):
     password: Mapped[str] = mapped_column(
         String(255)
     )
+    
+    role: Mapped[str] = mapped_column(
+    String(20),
+    default="participant"
+    )
 
     phone: Mapped[str | None] = mapped_column(
         String(20),

@@ -9,13 +9,14 @@ import Brand from "@/components/branding/Brand";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
-
+import { useRouter } from "next/navigation";
 import { login } from "@/services/auth";
 import { loginSchema, LoginSchema } from "@/lib/validators";
 
+
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -33,7 +34,7 @@ export default function LoginPage() {
         response.access_token
       );
 
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message);
@@ -92,7 +93,7 @@ export default function LoginPage() {
 
               <button
                 type="button"
-                className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                className="cursor-pointer text-sm font-medium text-blue-600 hover:text-blue-700"
               >
                 Forgot password?
               </button>
@@ -106,7 +107,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-slate-400 transition-colors hover:text-slate-600"
+                  className="cursor-pointer text-slate-400 transition-colors hover:text-slate-600"
                 >
                   {showPassword ? (
                     <EyeOff size={18} />
@@ -137,12 +138,13 @@ export default function LoginPage() {
         <div className="mt-10 border-t border-slate-200 pt-6">
           <p className="text-center text-sm text-slate-600">
             New to HackVerse?{" "}
-            <button
-              type="button"
-              className="font-medium text-blue-600 hover:text-blue-700"
-            >
-              Create an account
-            </button>
+<button
+  type="button"
+  onClick={() => router.push("/register")}
+  className="cursor-pointer font-medium text-blue-600 hover:text-blue-700"
+>
+  Create an account
+</button>
           </p>
         </div>
 

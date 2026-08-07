@@ -5,6 +5,14 @@ type LoginData = {
   password: string;
 };
 
+type RegisterData = {
+  full_name: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+  role: "participant" | "organizer";
+};
+
 export async function login(data: LoginData) {
   const formData = new URLSearchParams();
 
@@ -20,3 +28,14 @@ export async function login(data: LoginData) {
   });
 }
 
+export async function register(data: RegisterData) {
+  return apiFetch("/auth/register", {
+    method: "POST",
+    body: JSON.stringify({
+      full_name: data.full_name,
+      email: data.email,
+      password: data.password,
+      role: data.role,
+    }),
+  });
+}

@@ -29,7 +29,8 @@ def create_user(db: Session, user: UserRegister):
     db_user = User(
         full_name=user.full_name,
         email=user.email,
-        password=hash_password(user.password)
+        password=hash_password(user.password),
+        role=user.role
     )
 
     db.add(db_user)

@@ -5,6 +5,7 @@ class UserRegister(BaseModel):
     full_name: str
     email: EmailStr
     password: str
+    role: str
     
 class UserResponse(BaseModel):
     id: int
