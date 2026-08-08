@@ -2,8 +2,7 @@ import { X } from "lucide-react";
 import EditHackathonForm from "./EditHackathonForm";
 import { updateHackathon } from "@/services/hackathon";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import router from "next/dist/shared/lib/router/router";
+
 
 type Props = {
   open: boolean;
@@ -19,7 +18,6 @@ export default function EditHackathonModal({
   hackathon,
 }: Props) {
 
-const router = useRouter();
   const handleSubmit = async (data: any) => {
     try {
       const response = await updateHackathon(hackathon.id, data);
@@ -38,7 +36,7 @@ const router = useRouter();
 return (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-6 backdrop-blur-sm">
 
-    <div className="flex w-full max-w-3xl max-h-[90vh] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
+    <div className="flex w-full max-w-3xl max-h-[90vh] flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
 
       {/* Header */}
 

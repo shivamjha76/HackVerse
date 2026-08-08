@@ -9,15 +9,14 @@ type Props = {
   open: boolean;
   onClose: () => void;
   hackathon: any;
-  onDeleted: () => void;
 };
 
 export default function DeleteHackathonModal({
   open,
   onClose,
-  hackathon,
-  onDeleted,
+  hackathon
 }: Props) {
+
 const router = useRouter();
   const handleDelete = async () => {
     try {
@@ -36,7 +35,7 @@ const router = useRouter();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-6">
-      <div className="w-full max-w-xl rounded-2xl bg-white p-8 shadow-2xl">
+      <div className="w-full max-w-xl rounded-xl bg-white p-8 shadow-2xl">
         <DeleteHeader title={hackathon.title} />
         <DeleteWarning />
         <DeleteActions onClose={onClose} onDelete={handleDelete} />

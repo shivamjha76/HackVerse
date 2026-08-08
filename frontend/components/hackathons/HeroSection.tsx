@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
 import Badge from "@/components/ui/Badge";
 import EditHackathonModal from "@/components/hackathons/edit/EditHackathonModal";
 import DeleteHackathonModal from "@/components/hackathons/delete/DeleteHackathonModal";
+import ShareHackathonModal from "@/components/hackathons/share/ShareHackathonModal";
+
 
 import {
   ArrowLeft,
@@ -19,7 +20,8 @@ type Props = {
 };
 
 export default function HeroSection({ hackathon, onUpdated }: Props) {
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 useEffect(() => {
   document.body.style.overflow = isEditOpen ? "hidden" : "auto";
@@ -68,7 +70,10 @@ useEffect(() => {
               Delete
             </button>
 
-            <button className="flex items-center gap-2 rounded-xl border border-blue-700 bg-blue-600 px-4 py-2 font-medium cursor-pointer text-white transition hover:bg-blue-700">
+            <button
+              onClick={() => setIsShareOpen(true)}
+              className="flex items-center gap-2 rounded-xl border border-blue-700 bg-blue-600 px-4 py-2 font-medium cursor-pointer text-white transition hover:bg-blue-700"
+            >
               <Share2 size={18} />
               Share
             </button>
@@ -86,7 +91,12 @@ useEffect(() => {
   open={isDeleteOpen}
   onClose={() => setIsDeleteOpen(false)}
   hackathon={hackathon}
-  onDeleted={onUpdated ?? (() => {})}
+/>
+
+<ShareHackathonModal
+  open={isShareOpen}
+  onClose={() => setIsShareOpen(false)}
+hackathon={hackathon}
 />
     </>
   );
