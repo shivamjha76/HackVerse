@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import Badge from "@/components/ui/Badge";
 import EditHackathonModal from "@/components/hackathons/edit/EditHackathonModal";
+import DeleteHackathonModal from "@/components/hackathons/delete/DeleteHackathonModal";
 
 import {
   ArrowLeft,
@@ -19,6 +20,7 @@ type Props = {
 
 export default function HeroSection({ hackathon, onUpdated }: Props) {
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 useEffect(() => {
   document.body.style.overflow = isEditOpen ? "hidden" : "auto";
 
@@ -61,7 +63,7 @@ useEffect(() => {
               Edit
             </button>
 
-            <button className="flex items-center gap-2 rounded-xl bg-red-100 px-4 py-2 font-medium cursor-pointer text-red-700 transition hover:bg-red-200">
+            <button onClick={() => setIsDeleteOpen(true)} className="flex items-center gap-2 rounded-xl bg-red-100 px-4 py-2 font-medium cursor-pointer text-red-700 transition hover:bg-red-200">
               <Trash2 size={18} />
               Delete
             </button>
@@ -80,6 +82,12 @@ useEffect(() => {
         onUpdated={onUpdated ?? (() => {})}
         hackathon={hackathon}
       />
+<DeleteHackathonModal
+  open={isDeleteOpen}
+  onClose={() => setIsDeleteOpen(false)}
+  hackathon={hackathon}
+  onDeleted={onUpdated ?? (() => {})}
+/>
     </>
   );
 }

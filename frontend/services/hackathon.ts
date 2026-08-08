@@ -30,3 +30,9 @@ export async function updateHackathon(
     body: JSON.stringify(data),
   });
 }
+
+export async function deleteHackathon(id: number) {
+  return apiFetch(`/hackathons/${id}`, {
+    method: "DELETE",
+  });
+}
