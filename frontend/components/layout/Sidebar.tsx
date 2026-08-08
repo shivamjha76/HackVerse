@@ -46,14 +46,7 @@ const menuItems = [
 
 export default function Sidebar() {
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-slate-200 bg-white">
-
-      {/* Logo */}
-      <div className="flex h-20 items-center justify-center border-b border-slate-200">
-        <h1 className="text-2xl font-bold text-blue-600">
-          HackVerse
-        </h1>
-      </div>
+    <aside className="flex h-full w-64 flex-col bg-white border-r border-slate-200" >
 
       {/* Navigation */}
       <nav className="flex-1 space-y-2 p-4">

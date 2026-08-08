@@ -12,6 +12,7 @@ import StatCard from "@/components/dashboard/StatCard";
 import QuickAction from "@/components/dashboard/QuickAction";
 import RecentHackathons from "@/components/dashboard/RecentHackathons";
 import RecentActivity from "@/components/dashboard/RecentActivity";
+import DashboardStats from "@/components/dashboard/DashboardStats";
 
 export default function DashboardPage() {
   return (
@@ -27,34 +28,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          <StatCard
-            title="Hackathons"
-            value={12}
-            icon={<Trophy size={26} className="text-blue-600" />}
-          />
-
-          <StatCard
-            title="Participants"
-            value={356}
-            color="bg-green-50"
-            icon={<Users size={26} className="text-green-600" />}
-          />
-
-          <StatCard
-            title="Submissions"
-            value={94}
-            color="bg-orange-50"
-            icon={<FileText size={26} className="text-orange-600" />}
-          />
-
-          <StatCard
-            title="Drafts"
-            value={8}
-            color="bg-purple-50"
-            icon={<FolderOpen size={26} className="text-purple-600" />}
-          />
-        </div>
+        <DashboardStats />
       </div>
 
       <div className="mt-10">

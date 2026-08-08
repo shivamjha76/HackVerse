@@ -30,57 +30,52 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [role, setRole] = useState("participant");
   const router = useRouter();
-const {
-  register,
-  handleSubmit,
-  setValue,
-  formState: { errors },
-} = useForm<RegisterSchema>({
-  resolver: zodResolver(registerSchema),
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    } = useForm<RegisterSchema>({
+        resolver: zodResolver(registerSchema),
 
-  defaultValues: {
+    defaultValues: {
     role: "participant",
-  },
-});
+    },
+    });
 
-const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-const onSubmit = async (data: RegisterSchema) => {
-  console.log("Step 1: Form Submitted");
-  console.log(data);
+  const onSubmit = async (data: RegisterSchema) => {
+    console.log("Step 1: Form Submitted");
+    console.log(data);
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
+        console.log("Step 2: Calling API");
 
-    console.log("Step 2: Calling API");
+      const response = await registerUser(data);
+        console.log("Step 3: API Success");
+        console.log(response);
+          alert("Account created successfully!");
 
-    const response = await registerUser(data);
+        router.push("/login");
+      } catch (error) {
+          console.log("Step 4: API Error");
+          console.error(error);
 
-    console.log("Step 3: API Success");
-    console.log(response);
-
-    alert("Account created successfully!");
-
-    router.push("/login");
-  } catch (error) {
-    console.log("Step 4: API Error");
-    console.error(error);
-
-    if (error instanceof Error) {
-      alert(error.message);
-    }
-  } finally {
-    console.log("Step 5: Finally Block");
-    setLoading(false);
-  }
-};
+        if (error instanceof Error) {
+             alert(error.message);
+            }
+      } finally {
+          console.log("Step 5: Finally Block");
+              setLoading(false);
+          }
+    };
 
   return (
     <div className="flex w-full flex-col items-center">
 
-      <div className="mb-10">
-        <Brand />
-      </div>
+      <div className="mb-10"><Brand /></div>
 
       <Card className="w-full max-w-[600px] rounded-3xl border border-slate-200 bg-white p-10 shadow-lg shadow-slate-200/60">
 
@@ -196,76 +191,73 @@ const onSubmit = async (data: RegisterSchema) => {
             )}
           </div>
 
-<div>
-  <label className="mb-4 block text-sm font-medium text-slate-700">
-    Register As
-  </label>
+          <div>
+            <label className="mb-4 block text-sm font-medium text-slate-700">
+                Register As
+            </label>
 
-  <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
+                    {/* Participant */}
+              <button
+                type="button"
+                onClick={() => {
+                setRole("participant");
+                setValue("role", "participant");
+                }}
+                className={`cursor-pointer relative rounded-2xl border p-5 text-left transition-all ${
+                role === "participant"
+                ? "border-blue-600 bg-blue-50"
+                : "border-slate-200 hover:border-slate-300"
+                }`}
+              >
+                {role === "participant" && (
+                  <div className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
+                   ✓
+                  </div>
+                  )}
 
-    {/* Participant */}
+            <div className="mb-4">
+              <Users
+                size={32}
+                strokeWidth={2}
+                className={
+                role === "participant"
+                ? "text-blue-600"
+                : "text-slate-500"
+                }
+              />
+            </div>
 
-    <button
-      type="button"
-      onClick={() => {
-  setRole("participant");
-  setValue("role", "participant");
-}}
-      className={`cursor-pointer relative rounded-2xl border p-5 text-left transition-all ${
-        role === "participant"
+          <h3 className="font-semibold text-slate-900">
+              Participant
+          </h3>
+
+          <p className="mt-1 text-sm text-slate-500">
+            Join hackathons and collaborate with teams.
+          </p>
+        </button>
+
+           {/* Organizer */}
+        <button
+          type="button"
+          onClick={() => {
+          setRole("organizer");
+          setValue("role", "organizer");
+          }}
+          className={`cursor-pointer relative rounded-2xl border p-5 text-left transition-all ${
+          role === "organizer"
           ? "border-blue-600 bg-blue-50"
           : "border-slate-200 hover:border-slate-300"
-      }`}
-    >
-      {role === "participant" && (
-        <div className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
-          ✓
-        </div>
-      )}
+         }`}
+        >
+         {role === "organizer" && (
+            <div className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
+              ✓
+            </div>
+            )}
 
       <div className="mb-4">
-        <Users
-          size={32}
-          strokeWidth={2}
-          className={
-            role === "participant"
-              ? "text-blue-600"
-              : "text-slate-500"
-          }
-        />
-      </div>
-
-      <h3 className="font-semibold text-slate-900">
-        Participant
-      </h3>
-
-      <p className="mt-1 text-sm text-slate-500">
-        Join hackathons and collaborate with teams.
-      </p>
-    </button>
-
-    {/* Organizer */}
-
-    <button
-      type="button"
-      onClick={() => {
-  setRole("organizer");
-  setValue("role", "organizer");
-}}
-      className={`cursor-pointer relative rounded-2xl border p-5 text-left transition-all ${
-        role === "organizer"
-          ? "border-blue-600 bg-blue-50"
-          : "border-slate-200 hover:border-slate-300"
-      }`}
-    >
-      {role === "organizer" && (
-        <div className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
-          ✓
-        </div>
-      )}
-
-      <div className="mb-4">
-        <Building2
+          <Building2
           size={32}
           strokeWidth={2}
           className={

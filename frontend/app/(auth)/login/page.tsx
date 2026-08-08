@@ -13,7 +13,6 @@ import { useRouter } from "next/navigation";
 import { login } from "@/services/auth";
 import { loginSchema, LoginSchema } from "@/lib/validators";
 
-
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
@@ -138,13 +137,13 @@ export default function LoginPage() {
         <div className="mt-10 border-t border-slate-200 pt-6">
           <p className="text-center text-sm text-slate-600">
             New to HackVerse?{" "}
-<button
-  type="button"
-  onClick={() => router.push("/register")}
-  className="cursor-pointer font-medium text-blue-600 hover:text-blue-700"
->
-  Create an account
-</button>
+            <button
+              type="button"
+              onClick={() => router.push("/register")}
+              className="cursor-pointer font-medium text-blue-600 hover:text-blue-700"
+            >
+             Create an account
+            </button>
           </p>
         </div>
 
