@@ -52,3 +52,16 @@ def update_profile(db, user, profile):
     db.refresh(user)
 
     return user
+
+def change_password(db: Session, user, current_password: str, new_password: str):
+    from app.core.security import verify_password
+
+    if not verify_password(current_password, user.password):
+        return None
+
+    user.password = hash_password(new_password)
+
+    db.commit()
+    db.refresh(user)
+
+    return user

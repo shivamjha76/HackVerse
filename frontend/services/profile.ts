@@ -34,3 +34,16 @@ export async function updateProfile(
     body: JSON.stringify(data),
   });
 }
+
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string
+) {
+  return apiFetch("/users/me/password", {
+    method: "PUT",
+    body: JSON.stringify({
+      current_password: currentPassword,
+      new_password: newPassword,
+    }),
+  });
+}
