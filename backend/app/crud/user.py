@@ -45,6 +45,8 @@ def update_profile(db, user, profile):
     user.bio = profile.bio
     user.github = profile.github
     user.linkedin = profile.linkedin
+    user.instagram = profile.instagram
+    user.website = profile.website
 
     db.commit()
     db.refresh(user)

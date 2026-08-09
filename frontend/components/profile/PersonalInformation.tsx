@@ -7,19 +7,31 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-const items: [string, string, LucideIcon][] = [
-  ["Full Name", "Shivam", User],
-  ["Email", "shivam@example.com", Mail],
-  ["Phone", "+91 98765 43210", Phone],
-  ["Organization", "HackVerse", Building2],
-  [
-    "Bio",
-    "Passionate about building and organizing amazing hackathons.",
-    FileText,
-  ],
-];
+type PersonalInformationProps = {
+  fullName: string;
+  email: string;
+  phone: string | null;
+  bio: string | null;
+};
 
-export default function PersonalInformation() {
+export default function PersonalInformation({
+  fullName,
+  email,
+  phone,
+  bio,
+}: PersonalInformationProps) {
+  const items: [string, string, LucideIcon][] = [
+    ["Full Name", fullName, User],
+    ["Email", email, Mail],
+    ["Phone", phone || "Not provided", Phone],
+    ["Organization", "HackVerse", Building2],
+    [
+      "Bio",
+      bio || "No bio added.",
+      FileText,
+    ],
+  ];
+
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="mb-4 flex items-center gap-3">

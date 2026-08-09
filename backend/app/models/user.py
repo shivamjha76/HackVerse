@@ -50,3 +50,13 @@ class User(Base):
         String(255),
         nullable=True
     )
+    
+    instagram: Mapped[str | None] = mapped_column(
+     String(255),
+    nullable=True
+    )
+
+    website: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )

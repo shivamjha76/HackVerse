@@ -1,6 +1,24 @@
-import { CalendarDays, Mail, Pencil } from "lucide-react";
+import {
+  CalendarDays,
+  Mail,
+  Pencil,
+} from "lucide-react";
 
-export default function ProfileHeader() {
+type ProfileHeaderProps = {
+  fullName: string;
+  email: string;
+  onEdit: () => void;
+};
+
+export default function ProfileHeader({
+  fullName,
+  email,
+  onEdit,
+}: ProfileHeaderProps) {
+  const initial = fullName
+    ? fullName.charAt(0).toUpperCase()
+    : "?";
+
   return (
     <div className="rounded-xl border border-slate-200 bg-white px-6 py-5 shadow-sm">
       <div className="flex items-center justify-between gap-6">
@@ -8,16 +26,17 @@ export default function ProfileHeader() {
         <div className="flex items-center gap-5">
           {/* Avatar */}
           <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-blue-100 text-2xl font-bold text-blue-600">
-            S
+            {initial}
           </div>
 
           {/* Details */}
           <div>
             <div className="flex items-center gap-3">
               <h2 className="text-2xl font-bold text-slate-900">
-                Shivam
+                {fullName}
               </h2>
 
+              {/* Role is still static for now */}
               <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600">
                 Organizer
               </span>
@@ -26,9 +45,10 @@ export default function ProfileHeader() {
             <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-slate-500">
               <div className="flex items-center gap-2">
                 <Mail size={15} />
-                <span>shivam@example.com</span>
+                <span>{email}</span>
               </div>
 
+              {/* Joined date is still static for now */}
               <div className="flex items-center gap-2">
                 <CalendarDays size={15} />
                 <span>Joined on Aug 6, 2026</span>
@@ -40,7 +60,8 @@ export default function ProfileHeader() {
         {/* Edit Button */}
         <button
           type="button"
-          className="flex shrink-0 items-center gap-2 rounded-lg border border-blue-500 px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
+          className="flex shrink-0 items-center gap-2 cursor-pointer rounded-lg border border-blue-500 px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
+          onClick={onEdit}
         >
           <Pencil size={16} />
           Edit Profile

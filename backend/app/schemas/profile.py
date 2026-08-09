@@ -7,6 +7,8 @@ class ProfileUpdate(BaseModel):
     bio: str | None = None
     github: str | None = None
     linkedin: str | None = None
+    instagram: str | None = None
+    website: str | None = None
 
 
 class ProfileResponse(BaseModel):
@@ -17,6 +19,8 @@ class ProfileResponse(BaseModel):
     bio: str | None = None
     github: str | None = None
     linkedin: str | None = None
+    instagram: str | None = None
+    website: str | None = None
 
     class Config:
         from_attributes = True
