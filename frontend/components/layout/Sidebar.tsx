@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Trophy,
   Users,
-  FileText,
+  FileCheck2,
   User,
   Settings,
   LogOut,
@@ -29,8 +30,8 @@ const menuItems = [
   },
   {
     title: "Submissions",
-    href: "#",
-    icon: FileText,
+    href: "/submissions",
+    icon: FileCheck2,
   },
   {
     title: "Profile",
@@ -45,19 +46,29 @@ const menuItems = [
 ];
 
 export default function Sidebar() {
-  return (
-    <aside className="flex h-full w-64 flex-col bg-white border-r border-slate-200" >
+  const pathname = usePathname();
 
+  return (
+    <aside className="flex h-full w-64 flex-col bg-white">
       {/* Navigation */}
       <nav className="flex-1 space-y-2 p-4">
         {menuItems.map((item) => {
           const Icon = item.icon;
 
+          const isActive =
+            pathname === item.href ||
+            (item.href !== "/dashboard" &&
+              pathname.startsWith(`${item.href}/`));
+
           return (
             <Link
               key={item.title}
               href={item.href}
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-600 transition-all hover:bg-blue-50 hover:text-blue-600"
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-all ${
+                isActive
+                  ? "bg-blue-50 text-blue-600"
+                  : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
+              }`}
             >
               <Icon size={20} />
               <span>{item.title}</span>
@@ -67,8 +78,9 @@ export default function Sidebar() {
       </nav>
 
       {/* Logout */}
-      <div className="border-t border-slate-200 p-4">
+      <div className="p-4">
         <button
+          type="button"
           className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-red-500 transition hover:bg-red-50"
         >
           <LogOut size={20} />
