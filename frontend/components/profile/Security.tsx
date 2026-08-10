@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { ShieldCheck } from "lucide-react";
 import ChangePasswordModal from "./ChangePasswordModal";
+import { useEffect, useState } from "react";
+import { getActiveSessions } from "@/services/profile";
+import ActiveSessionsModal from "./ActiveSessionsModal";
 
 const securityItems = [
   {
@@ -30,6 +32,25 @@ const securityItems = [
 export default function Security() {
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const [showPasswordSuccess, setShowPasswordSuccess] = useState(false);
+  const [activeSessions, setActiveSessions] = useState<any[]>([]);
+  const [activeSessionsOpen, setActiveSessionsOpen] =
+  useState(false);
+
+useEffect(() => {
+  async function loadActiveSessions() {
+    try {
+      const sessions = await getActiveSessions();
+      setActiveSessions(sessions);
+    } catch (error) {
+      console.error(
+        "Failed to load active sessions:",
+        error
+      );
+    }
+  }
+
+  loadActiveSessions();
+}, []);
 
   return (
     <>
@@ -62,16 +83,26 @@ export default function Security() {
                       : "text-slate-500"
                   }`}
                 >
-                  {item.value}
+                  {item.label === "Active Sessions"
+  ? `${activeSessions.length} ${
+      activeSessions.length === 1
+        ? "session"
+        : "sessions"
+    }`
+  : item.value}
                 </span>
 
                 <button
                   type="button"
                   onClick={() => {
-                    if (item.label === "Password") {
-                      setChangePasswordOpen(true);
-                    }
-                  }}
+  if (item.label === "Password") {
+    setChangePasswordOpen(true);
+  }
+
+  if (item.label === "Active Sessions") {
+    setActiveSessionsOpen(true);
+  }
+}}
                   className="rounded-lg cursor-pointer border border-blue-500 px-3 py-1.5 text-xs font-medium text-blue-600 transition hover:bg-blue-50"
                 >
                   {item.action}
@@ -91,6 +122,11 @@ export default function Security() {
               setShowPasswordSuccess(false);
             }, 3000);
           }}
+        />
+        <ActiveSessionsModal
+          open={activeSessionsOpen}
+          onClose={() => setActiveSessionsOpen(false)}
+          sessions={activeSessions}
         />
       </div>
 

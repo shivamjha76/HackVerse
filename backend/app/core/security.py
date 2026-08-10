@@ -7,7 +7,7 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-
+from app.crud.session import get_session_by_id
 from app.database.database import get_db
 
 SECRET_KEY = settings.SECRET_KEY
@@ -69,19 +69,31 @@ def verify_access_token(token: str):
 
 
 def get_current_user(
-    
     token: str = Depends(oauth2_scheme),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     from app.crud.user import get_user_by_email
+
     payload = verify_access_token(token)
 
     if payload is None:
         return None
 
     email = payload.get("sub")
+    session_id = payload.get("session_id")
 
-    if email is None:
+    if email is None or session_id is None:
+        return None
+
+    session = get_session_by_id(db, session_id)
+
+    if session is None:
+        return None
+
+    if session.revoked:
+        return None
+
+    if session.expires_at <= datetime.utcnow():
         return None
 
     return get_user_by_email(db, email)

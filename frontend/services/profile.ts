@@ -47,3 +47,13 @@ export async function changePassword(
     }),
   });
 }
+
+export async function getActiveSessions() {
+  return apiFetch("/users/me/sessions");
+}
+
+export async function revokeSession(sessionId: string) {
+  return apiFetch(`/users/me/sessions/${sessionId}`, {
+    method: "DELETE",
+  });
+}

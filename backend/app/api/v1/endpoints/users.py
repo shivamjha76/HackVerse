@@ -7,6 +7,9 @@ from app.schemas.profile import ProfileUpdate, ProfileResponse
 from app.crud.user import update_profile, change_password
 from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.password import PasswordChange
+from app.crud.session import get_user_sessions
+from app.schemas.session import SessionResponse
+from app.crud.session import get_user_sessions, revoke_session
 
 router = APIRouter(
     prefix="/users",
@@ -23,7 +26,41 @@ def get_profile(
 ):
     return current_user
 
+@router.get(
+    "/me/sessions",
+    response_model=list[SessionResponse]
+)
+def get_active_sessions(
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    return get_user_sessions(
+        db,
+        current_user.id
+    )
 
+@router.delete("/me/sessions/{session_id}")
+def revoke_user_session(
+    session_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    session = revoke_session(
+        db,
+        session_id,
+        current_user.id
+    )
+
+    if session is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Session not found"
+        )
+
+    return {
+        "message": "Session revoked successfully"
+    }
+    
 @router.put(
     "/me",
     response_model=ProfileResponse
