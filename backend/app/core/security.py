@@ -67,6 +67,15 @@ def verify_access_token(token: str):
     except JWTError:
         return None
 
+def get_current_session_id(
+    token: str = Depends(oauth2_scheme),
+):
+    payload = verify_access_token(token)
+
+    if payload is None:
+        return None
+
+    return payload.get("session_id")
 
 def get_current_user(
     token: str = Depends(oauth2_scheme),

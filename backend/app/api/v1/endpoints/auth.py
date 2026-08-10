@@ -13,6 +13,7 @@ from app.database.database import get_db
 from app.models.session import UserSession
 from app.schemas.token import Token
 from app.schemas.user import UserRegister, UserResponse
+from app.crud.login_activity import create_login_activity
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -33,13 +34,33 @@ def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ):
-    db_user = authenticate_user(db, form_data.username, form_data.password)
+    db_user = authenticate_user(
+        db,
+        form_data.username,
+        form_data.password,
+    )
 
     if not db_user:
+        failed_user = get_user_by_email(db, form_data.username)
+
+        if failed_user:
+            device = request.headers.get("user-agent")
+            ip_address = request.client.host if request.client else None
+
+            create_login_activity(
+                db=db,
+                user_id=failed_user.id,
+                device=device,
+                ip_address=ip_address,
+                success=False,
+            )
+
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
     session_id = str(uuid4())
-    expires_at = datetime.now(UTC) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    expires_at = datetime.now(UTC) + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
     device = request.headers.get("user-agent")
     ip_address = request.client.host if request.client else None
 
@@ -50,6 +71,14 @@ def login(
         device=device,
         ip_address=ip_address,
         expires_at=expires_at,
+    )
+
+    create_login_activity(
+        db=db,
+        user_id=db_user.id,
+        device=device,
+        ip_address=ip_address,
+        success=True,
     )
 
     token = create_access_token({"sub": db_user.email, "session_id": session_id})

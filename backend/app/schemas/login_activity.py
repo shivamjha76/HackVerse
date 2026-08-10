@@ -3,14 +3,13 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class SessionResponse(BaseModel):
+class LoginActivityResponse(BaseModel):
     id: int
+    user_id: int
     device: str | None = None
     ip_address: str | None = None
-    created_at: datetime
-    last_active_at: datetime
-    expires_at: datetime
-    is_current: bool = False
+    login_at: datetime
+    success: bool
 
     class Config:
         from_attributes = True

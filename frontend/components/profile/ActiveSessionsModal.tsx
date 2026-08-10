@@ -10,6 +10,7 @@ type Session = {
   created_at: string;
   last_active_at: string;
   expires_at: string;
+    is_current: boolean;
 };
 
 type ActiveSessionsModalProps = {
@@ -23,14 +24,15 @@ export default function ActiveSessionsModal({
   onClose,
   sessions,
 }: ActiveSessionsModalProps) {
-  async function handleRevoke(sessionId: number) {
-    try {
-      await revokeSession(String(sessionId));
-      window.location.reload();
-    } catch (error) {
-      console.error("Failed to revoke session:", error);
-    }
+ async function handleRevoke(sessionId: number) {
+  try {
+    await revokeSession(Number(sessionId));
+
+    window.location.reload();
+  } catch (error) {
+    console.error("Failed to revoke session:", error);
   }
+}
   if (!open) return null;
 
   return (
@@ -71,6 +73,11 @@ export default function ActiveSessionsModal({
     <p className="text-sm font-medium text-slate-800">
       {session.device || "Unknown device"}
     </p>
+{session.is_current && (
+  <span className="mt-1 inline-block rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-600">
+    Current session
+  </span>
+)}
 
     <p className="mt-1 text-xs text-slate-500">
       IP: {session.ip_address || "Unknown"}
@@ -83,13 +90,15 @@ export default function ActiveSessionsModal({
       ).toLocaleString()}
     </p>
 
-<button
-  type="button"
-  onClick={() => handleRevoke(session.id)}
-  className="mt-3 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50"
->
-  Revoke
-</button>
+{!session.is_current && (
+  <button
+    type="button"
+    onClick={() => handleRevoke(session.id)}
+    className="mt-3 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50"
+  >
+    Revoke
+  </button>
+)}
   </div>
 ))}
             </div>

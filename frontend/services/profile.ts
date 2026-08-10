@@ -28,7 +28,7 @@ export async function getProfile(): Promise<UserProfile> {
 
 export async function updateProfile(
   data: ProfileUpdateData
-): Promise<UserProfile> {
+) {
   return apiFetch("/users/me", {
     method: "PUT",
     body: JSON.stringify(data),
@@ -52,8 +52,12 @@ export async function getActiveSessions() {
   return apiFetch("/users/me/sessions");
 }
 
-export async function revokeSession(sessionId: string) {
+export async function revokeSession(sessionId: number) {
   return apiFetch(`/users/me/sessions/${sessionId}`, {
     method: "DELETE",
   });
+}
+
+export async function getLoginActivity() {
+  return apiFetch("/users/me/login-activity");
 }

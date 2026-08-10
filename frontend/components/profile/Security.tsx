@@ -3,8 +3,11 @@
 import { ShieldCheck } from "lucide-react";
 import ChangePasswordModal from "./ChangePasswordModal";
 import { useEffect, useState } from "react";
+import { getLoginActivity } from "@/services/profile";
 import { getActiveSessions } from "@/services/profile";
 import ActiveSessionsModal from "./ActiveSessionsModal";
+import LoginActivityModal from "./LoginActivityModal";
+
 
 const securityItems = [
   {
@@ -35,21 +38,29 @@ export default function Security() {
   const [activeSessions, setActiveSessions] = useState<any[]>([]);
   const [activeSessionsOpen, setActiveSessionsOpen] =
   useState(false);
+  const [loginActivityOpen, setLoginActivityOpen] =
+  useState(false);
+  const [loginActivity, setLoginActivity] = useState<any[]>([]);
 
 useEffect(() => {
-  async function loadActiveSessions() {
+  async function loadSecurityData() {
     try {
-      const sessions = await getActiveSessions();
+      const [sessions, activity] = await Promise.all([
+        getActiveSessions(),
+        getLoginActivity(),
+      ]);
+
       setActiveSessions(sessions);
+      setLoginActivity(activity);
     } catch (error) {
       console.error(
-        "Failed to load active sessions:",
+        "Failed to load security data:",
         error
       );
     }
   }
 
-  loadActiveSessions();
+  loadSecurityData();
 }, []);
 
   return (
@@ -94,13 +105,17 @@ useEffect(() => {
 
                 <button
                   type="button"
-                  onClick={() => {
+onClick={() => {
   if (item.label === "Password") {
     setChangePasswordOpen(true);
   }
 
   if (item.label === "Active Sessions") {
     setActiveSessionsOpen(true);
+  }
+
+  if (item.label === "Login Activity") {
+    setLoginActivityOpen(true);
   }
 }}
                   className="rounded-lg cursor-pointer border border-blue-500 px-3 py-1.5 text-xs font-medium text-blue-600 transition hover:bg-blue-50"
@@ -128,6 +143,11 @@ useEffect(() => {
           onClose={() => setActiveSessionsOpen(false)}
           sessions={activeSessions}
         />
+<LoginActivityModal
+  open={loginActivityOpen}
+  onClose={() => setLoginActivityOpen(false)}
+  activities={loginActivity}
+/>
       </div>
 
       {showPasswordSuccess && (
