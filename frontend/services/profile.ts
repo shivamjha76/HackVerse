@@ -22,14 +22,33 @@ export type ProfileUpdateData = {
   website: string;
 };
 
+export type ActiveSession = {
+  id: number;
+  device: string | null;
+  ip_address: string | null;
+  created_at: string;
+  last_active_at: string;
+  expires_at: string;
+  is_current: boolean;
+};
+
+export type LoginActivity = {
+  id: number;
+  user_id: number;
+  device: string | null;
+  ip_address: string | null;
+  login_at: string;
+  success: boolean;
+};
+
 export async function getProfile(): Promise<UserProfile> {
-  return apiFetch("/users/me");
+  return apiFetch<UserProfile>("/users/me");
 }
 
 export async function updateProfile(
   data: ProfileUpdateData
 ) {
-  return apiFetch("/users/me", {
+  return apiFetch<UserProfile>("/users/me", {
     method: "PUT",
     body: JSON.stringify(data),
   });
@@ -48,8 +67,8 @@ export async function changePassword(
   });
 }
 
-export async function getActiveSessions() {
-  return apiFetch("/users/me/sessions");
+export async function getActiveSessions(): Promise<ActiveSession[]> {
+  return apiFetch<ActiveSession[]>("/users/me/sessions");
 }
 
 export async function revokeSession(sessionId: number) {
@@ -58,6 +77,6 @@ export async function revokeSession(sessionId: number) {
   });
 }
 
-export async function getLoginActivity() {
-  return apiFetch("/users/me/login-activity");
+export async function getLoginActivity(): Promise<LoginActivity[]> {
+  return apiFetch<LoginActivity[]>("/users/me/login-activity");
 }

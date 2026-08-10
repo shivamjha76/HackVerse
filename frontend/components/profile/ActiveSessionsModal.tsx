@@ -1,22 +1,15 @@
 "use client";
 
 import { X } from "lucide-react";
-import { revokeSession } from "@/services/profile";
-
-type Session = {
-  id: number;
-  device: string | null;
-  ip_address: string | null;
-  created_at: string;
-  last_active_at: string;
-  expires_at: string;
-    is_current: boolean;
-};
+import {
+  revokeSession,
+  type ActiveSession,
+} from "@/services/profile";
 
 type ActiveSessionsModalProps = {
   open: boolean;
   onClose: () => void;
-  sessions: Session[];
+  sessions: ActiveSession[];
 };
 
 export default function ActiveSessionsModal({

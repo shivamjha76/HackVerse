@@ -2,10 +2,10 @@ const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   "http://localhost:8000";
 
-export async function apiFetch(
+export async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {}
-) {
+): Promise<T> {
   const token = localStorage.getItem("access_token");
 
   const response = await fetch(
@@ -38,7 +38,7 @@ export async function apiFetch(
   }
 
   if (response.status === 204) {
-  return null;
+  return null as T;
 }
 
 return response.json();

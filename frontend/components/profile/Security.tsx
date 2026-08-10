@@ -3,11 +3,14 @@
 import { ShieldCheck } from "lucide-react";
 import ChangePasswordModal from "./ChangePasswordModal";
 import { useEffect, useState } from "react";
-import { getLoginActivity } from "@/services/profile";
-import { getActiveSessions } from "@/services/profile";
 import ActiveSessionsModal from "./ActiveSessionsModal";
 import LoginActivityModal from "./LoginActivityModal";
-
+import {
+  getLoginActivity,
+  getActiveSessions,
+  type ActiveSession,
+  type LoginActivity,
+} from "@/services/profile";
 
 const securityItems = [
   {
@@ -35,12 +38,13 @@ const securityItems = [
 export default function Security() {
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const [showPasswordSuccess, setShowPasswordSuccess] = useState(false);
-  const [activeSessions, setActiveSessions] = useState<any[]>([]);
+  const [activeSessions, setActiveSessions] = useState<ActiveSession[]>([]);
   const [activeSessionsOpen, setActiveSessionsOpen] =
   useState(false);
   const [loginActivityOpen, setLoginActivityOpen] =
   useState(false);
-  const [loginActivity, setLoginActivity] = useState<any[]>([]);
+  const [loginActivity, setLoginActivity] =
+  useState<LoginActivity[]>([]);
 
 useEffect(() => {
   async function loadSecurityData() {

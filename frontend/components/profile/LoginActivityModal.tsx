@@ -1,15 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-
-type LoginActivity = {
-  id: number;
-  user_id: number;
-  device: string | null;
-  ip_address: string | null;
-  login_at: string;
-  success: boolean;
-};
+import { type LoginActivity } from "@/services/profile";
 
 type LoginActivityModalProps = {
   open: boolean;
