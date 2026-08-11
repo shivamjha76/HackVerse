@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-
+import { toast } from "sonner";
 import Brand from "@/components/branding/Brand";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
@@ -13,12 +13,20 @@ import { useRouter } from "next/navigation";
 import { login } from "@/services/auth";
 import { loginSchema, LoginSchema } from "@/lib/validators";
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+  const [resending, setResending] = useState(false);
+
   const router = useRouter();
+
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -26,18 +34,86 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginSchema) => {
     try {
-      const response = await login(data);
+      setShowResend(false);
+
+      const response = (await login(data)) as {
+        access_token: string;
+      };
 
       localStorage.setItem(
         "access_token",
         response.access_token
       );
 
+      toast.success("Login successful!", {
+        description: "Welcome back to HackVerse.",
+      });
+
       router.push("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
-        alert(error.message);
+        if (
+          error.message
+            .toLowerCase()
+            .includes("verify your email")
+        ) {
+          setShowResend(true);
+
+          toast.warning("Email not verified", {
+            description:
+              "Please verify your email before logging in.",
+          });
+
+          return;
+        }
+
+        toast.error("Login failed", {
+          description: error.message,
+        });
       }
+    }
+  };
+
+  const handleResendVerification = async () => {
+    const email = getValues("email");
+
+    if (!email) {
+      toast.warning("Email required", {
+        description: "Please enter your email first.",
+      });
+      return;
+    }
+
+    try {
+      setResending(true);
+
+      const response = await fetch(
+        `${BASE_URL}/auth/resend-verification?email=${encodeURIComponent(email)}`,
+        {
+          method: "POST",
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.detail || "Unable to resend verification email."
+        );
+      }
+
+      toast.success("Verification email sent!", {
+        description:
+          "Please check your inbox and verify your email.",
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Unable to send email", {
+          description: error.message,
+        });
+      }
+    } finally {
+      setResending(false);
     }
   };
 
@@ -105,7 +181,9 @@ export default function LoginPage() {
               rightIcon={
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() =>
+                    setShowPassword(!showPassword)
+                  }
                   className="cursor-pointer text-slate-400 transition-colors hover:text-slate-600"
                 >
                   {showPassword ? (
@@ -134,6 +212,27 @@ export default function LoginPage() {
 
         </form>
 
+        {showResend && (
+          <div className="mt-5 rounded-xl border border-blue-100 bg-blue-50 p-4">
+
+            <p className="text-sm text-blue-800">
+              Your email is not verified yet.
+            </p>
+
+            <button
+              type="button"
+              onClick={handleResendVerification}
+              disabled={resending}
+              className="mt-2 cursor-pointer text-sm font-semibold text-blue-600 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {resending
+                ? "Sending..."
+                : "Resend verification email"}
+            </button>
+
+          </div>
+        )}
+
         <div className="mt-10 border-t border-slate-200 pt-6">
           <p className="text-center text-sm text-slate-600">
             New to HackVerse?{" "}
@@ -142,7 +241,7 @@ export default function LoginPage() {
               onClick={() => router.push("/register")}
               className="cursor-pointer font-medium text-blue-600 hover:text-blue-700"
             >
-             Create an account
+              Create an account
             </button>
           </p>
         </div>

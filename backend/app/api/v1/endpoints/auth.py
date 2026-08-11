@@ -1,31 +1,75 @@
 from datetime import datetime, timedelta, UTC
 from uuid import uuid4
-
+import secrets
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-
+from app.services.email import send_verification_email
 from app.core.config import settings
 from app.core.security import create_access_token, get_current_user
 from app.crud.session import create_session
-from app.crud.user import authenticate_user, create_user, get_user_by_email
+from app.crud.user import (
+    authenticate_user,
+    create_user,
+    get_user_by_email,
+    verify_user_email,
+    get_user_by_id,
+)
 from app.database.database import get_db
 from app.models.session import UserSession
 from app.schemas.token import Token
 from app.schemas.user import UserRegister, UserResponse
 from app.crud.login_activity import create_login_activity
+from app.crud.email_verification import (
+    create_verification_token,
+    get_verification_by_token,
+    mark_verification_as_used,
+)
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 @router.post("/register", response_model=UserResponse, status_code=201)
-def register(user: UserRegister, db: Session = Depends(get_db)):
-    existing_user = get_user_by_email(db, user.email)
+def register(
+    user: UserRegister,
+    db: Session = Depends(get_db)
+):
+    existing_user = get_user_by_email(
+        db,
+        user.email
+    )
 
     if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(
+            status_code=400,
+            detail="Email already registered"
+        )
 
-    return create_user(db, user)
+    db_user = create_user(
+        db,
+        user
+    )
+
+    verification_token = secrets.token_urlsafe(32)
+
+    expires_at = (
+        datetime.now(UTC)
+        + timedelta(hours=24)
+    )
+
+    create_verification_token(
+         db=db,
+         user_id=db_user.id,
+         token=verification_token,
+         expires_at=expires_at,
+    )
+
+    send_verification_email(
+    recipient_email=db_user.email,
+    verification_token=verification_token,
+   )
+
+    return db_user
 
 
 @router.post("/login", response_model=Token)
@@ -56,6 +100,12 @@ def login(
             )
 
         raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    if not db_user.is_email_verified:
+     raise HTTPException(
+        status_code=403,
+        detail="Please verify your email before logging in"
+    )
 
     session_id = str(uuid4())
     expires_at = datetime.now(UTC) + timedelta(
@@ -89,3 +139,98 @@ def login(
 @router.get("/me")
 def get_me(current_user=Depends(get_current_user)):
     return current_user
+
+@router.get("/verify-email")
+def verify_email(
+    token: str,
+    db: Session = Depends(get_db),
+):
+    verification = get_verification_by_token(
+        db,
+        token
+    )
+
+    if verification is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid verification token"
+        )
+
+    if verification.used:
+        raise HTTPException(
+            status_code=400,
+            detail="Verification token has already been used"
+        )
+
+    if verification.expires_at <= datetime.utcnow():
+        raise HTTPException(
+            status_code=400,
+            detail="Verification token has expired"
+        )
+
+    user = get_user_by_id(
+        db,
+        verification.user_id
+    )
+
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    verify_user_email(
+        db,
+        user
+    )
+
+    mark_verification_as_used(
+        db,
+        verification
+    )
+
+    return {
+        "message": "Email verified successfully"
+    }
+    
+@router.post("/resend-verification")
+def resend_verification(
+    email: str,
+    db: Session = Depends(get_db),
+):
+    user = get_user_by_email(db, email)
+
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    if user.is_email_verified:
+        raise HTTPException(
+            status_code=400,
+            detail="Email is already verified"
+        )
+
+    verification_token = secrets.token_urlsafe(32)
+
+    expires_at = (
+        datetime.now(UTC)
+        + timedelta(hours=24)
+    )
+
+    create_verification_token(
+        db=db,
+        user_id=user.id,
+        token=verification_token,
+        expires_at=expires_at,
+    )
+
+    send_verification_email(
+        recipient_email=user.email,
+        verification_token=verification_token,
+    )
+
+    return {
+        "message": "Verification email sent successfully."
+    }

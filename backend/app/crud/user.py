@@ -65,3 +65,22 @@ def change_password(db: Session, user, current_password: str, new_password: str)
     db.refresh(user)
 
     return user
+
+def verify_user_email(
+    db: Session,
+    user: User
+):
+    user.is_email_verified = True
+
+    db.commit()
+    db.refresh(user)
+
+    return user
+
+def get_user_by_id(
+    db: Session,
+    user_id: int
+):
+    return db.query(User).filter(
+        User.id == user_id
+    ).first()

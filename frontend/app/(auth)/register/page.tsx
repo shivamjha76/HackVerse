@@ -19,6 +19,7 @@ import { register as registerUser } from "@/services/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import {
   registerSchema,
@@ -56,7 +57,10 @@ export default function RegisterPage() {
       const response = await registerUser(data);
         console.log("Step 3: API Success");
         console.log(response);
-          alert("Account created successfully!");
+          toast.success("Verification email sent!", {
+            description:
+            "Please check your inbox and verify your email before logging in.",
+       });
 
         router.push("/login");
       } catch (error) {

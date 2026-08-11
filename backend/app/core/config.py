@@ -7,6 +7,11 @@ class Settings(BaseSettings):
     DATABASE_HOST: str
     DATABASE_PORT: int
     DATABASE_NAME: str
+    
+    SMTP_HOST: str
+    SMTP_PORT: int
+    SMTP_USER: str
+    SMTP_PASSWORD: str
 
     SECRET_KEY: str
     ALGORITHM: str
@@ -17,3 +22,8 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+print("SMTP USER:", settings.SMTP_USER)
+print("SMTP HOST:", settings.SMTP_HOST)
+print("SMTP PORT:", settings.SMTP_PORT)
+print("SMTP PASSWORD LOADED:", bool(settings.SMTP_PASSWORD))

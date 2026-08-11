@@ -1,4 +1,4 @@
-from sqlalchemy import String
+from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import Base
@@ -22,6 +22,12 @@ class User(Base):
         index=True
     )
 
+    is_email_verified: Mapped[bool] = mapped_column(
+    Boolean,
+    default=False,
+    nullable=False
+   )
+    
     password: Mapped[str] = mapped_column(
         String(255)
     )
