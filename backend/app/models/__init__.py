@@ -6,3 +6,4 @@ from app.models.team_join_request import TeamJoinRequest
 from app.models.session import UserSession
 from app.models.login_activity import LoginActivity
 from app.models.email_verification import EmailVerification
+from app.models.password_reset import PasswordReset
