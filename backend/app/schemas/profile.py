@@ -21,6 +21,7 @@ class ProfileResponse(BaseModel):
     linkedin: str | None = None
     instagram: str | None = None
     website: str | None = None
+    role: str
 
     class Config:
         from_attributes = True

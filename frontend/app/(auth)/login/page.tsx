@@ -12,6 +12,7 @@ import Input from "@/components/ui/Input";
 import { useRouter } from "next/navigation";
 import { login } from "@/services/auth";
 import { loginSchema, LoginSchema } from "@/lib/validators";
+import { getProfile } from "@/services/profile";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -49,7 +50,13 @@ export default function LoginPage() {
         description: "Welcome back to HackVerse.",
       });
 
-      router.push("/dashboard");
+      const profile = await getProfile();
+
+if (profile.role === "organizer") {
+  router.push("/organizer/dashboard");
+} else {
+  router.push("/participant/dashboard");
+}
     } catch (error) {
       if (error instanceof Error) {
         if (

@@ -4,6 +4,7 @@ export type UserProfile = {
   id: number;
   full_name: string;
   email: string;
+  role: string;
   phone: string | null;
   bio: string | null;
   github: string | null;

@@ -5,9 +5,27 @@ import {
   Search,
   UserCircle,
 } from "lucide-react";
+import { getProfile } from "@/services/profile";
+import { useEffect, useState } from "react";
 
 export default function Topbar() {
+const [profile, setProfile] = useState<{
+  full_name: string;
+  role: string;
+} | null>(null);
+
+useEffect(() => {
+  getProfile()
+    .then((data) => {
+      setProfile(data);
+    })
+    .catch((error) => {
+      console.error("Failed to load profile:", error);
+    });
+}, []);
+
   return (
+
     <header className="relative flex h-20 items-center border-b border-slate-200 bg-white px-8">
 
       {/* Logo */}
@@ -51,12 +69,12 @@ export default function Topbar() {
 
           <div>
             <p className="text-sm font-semibold text-slate-900">
-              Shivam
-            </p>
+  {profile?.full_name || "User"}
+</p>
 
-            <p className="text-xs text-slate-500">
-              Organizer
-            </p>
+<p className="text-xs capitalize text-slate-500">
+  {profile?.role || "User"}
+</p>
           </div>
         </div>
 
