@@ -38,3 +38,18 @@ class HackathonResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        
+class HackathonRegistrationCreate(BaseModel):
+    hackathon_id: int
+    team_id: int | None = None
+    registration_type: str
+    
+class HackathonRegistrationResponse(BaseModel):
+    id: int
+    user_id: int
+    hackathon_id: int
+    team_id: int | None = None
+    registration_type: str
+
+    class Config:
+        from_attributes = True

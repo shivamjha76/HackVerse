@@ -1,7 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
-
 from app.database.base import Base
-
 
 class Hackathon(Base):
     __tablename__ = "hackathons"

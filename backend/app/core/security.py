@@ -105,4 +105,6 @@ def get_current_user(
     if session.expires_at <= datetime.utcnow():
         return None
 
-    return get_user_by_email(db, email)
+    user = get_user_by_email(db, email)
+
+    return user
