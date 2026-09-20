@@ -117,7 +117,6 @@ Hackathons
      ▼
 Teams
 ```
-
 ### Business Rules
 
 - A user can create multiple teams across different hackathons.
